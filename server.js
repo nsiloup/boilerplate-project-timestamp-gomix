@@ -1,3 +1,4 @@
+require('dotenv').config();
 // server.js
 // where your node app starts
 
