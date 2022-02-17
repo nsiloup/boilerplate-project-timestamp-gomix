@@ -25,6 +25,43 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+//[ME] serve a JSON @ /api endpoint
+app.get("/api", (req, res)=>{
+  res.json({
+    "unix":Date.now(),
+    "utc":new Date().toUTCString(),
+  })
+});
+
+//[ME] routing for the UTC date endpoint
+app.get(`/api/:date`, (req, res)=>{
+  let myJson = {};
+  let {date} = req.params;
+  //checking if the string is correct
+  let isParsable=(string)=>{
+    return isNaN(Date.parse(string))?false:true;
+  }
+  if(date){
+    if(isParsable(date)){
+      let myUTC = new Date(date);
+      myJson = {
+        "utc":myUTC.toUTCString(),
+        "unix":myUTC.valueOf(),
+      };
+    }else if(!isParsable(date) && !isNaN(date)){
+      let myUNIX = new Date(Number(date));
+      myJson = {
+        "utc":myUNIX.toUTCString(),
+        "unix":myUNIX.valueOf(),
+      };
+    }
+    else{
+      myJson = { error : "Invalid Date" };
+    }
+  }
+  res.json(myJson);
+
+});
 
 
 // listen for requests :)
